@@ -1,4 +1,3 @@
-import re
 from itertools import cycle, islice
 
 def read_input():
