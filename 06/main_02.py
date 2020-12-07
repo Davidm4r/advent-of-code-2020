@@ -1,49 +1,28 @@
-import re
-
+import collections
 
 def read_input():
     with open('input.txt') as f:
-        lines = f.read().splitlines()
+        lines = f.read().split('\n\n')
     return lines
 
 
-def get_row(code):
-    rows = list(range(0,128))
-    for letter in code:
-        if letter == "F":
-            rows = rows[:len(rows) // 2]
-        elif letter == "B":
-            rows = rows[len(rows) // 2:]
-    return rows[0]
+def count_yes_per_group(group):
+    yes_answers = 0
+    list_answers = []
+    d = collections.defaultdict(int)
+    for person in group.split():
+        for answer in person:
+            list_answers.append(answer)
+            d[answer] += 1
+        for key in d.keys():
+            if d[key] == len(group.split()):
+                yes_answers += 1
+    return yes_answers
 
-
-def get_column(code):
-    colummns = list(range(0, 8))
-    for letter in code:
-        if letter == "L":
-            colummns = colummns[:len(colummns) // 2]
-        elif letter == "R":
-            colummns = colummns[len(colummns) // 2:]
-    return colummns[0]
-
-def check_empty_seat(seats):
-    for index, seat in enumerate(seats):
-        try:
-            if seat -1 == seats[index-1] and seat +1 == seats[index+1]:
-                pass
-            elif index != 0:
-                print(f"Your seat is close to {seat}")
-        except IndexError as e:
-            pass
 
 if __name__ == "__main__":
-    list_id = []
-    for line in read_input():
-        row = get_row(line[:7])
-        column = get_column(line[7:])
-        print(f"ID for row {row} and column {column} is {row*8+column}")
-        list_id.append(row*8+column)
+    number_of_yes = 0
+    for group in read_input():
+        number_of_yes += count_yes_per_group(group)
 
-    # Order the list by id
-    list_id.sort()
-    check_empty_seat(list_id)
+    print(number_of_yes)
